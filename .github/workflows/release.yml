@@ -1,0 +1,30 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          mkdir -p dist
+          /usr/bin/swiftc -O -framework AppKit -framework Foundation -o dist/SimplifiWorthBar SimplifiWorthBar.swift
+          cp get_networth_label.py dist/get_networth_label.py
+          cp install.sh dist/install.sh
+          chmod +x dist/install.sh dist/get_networth_label.py
+
+      - name: Package
+        run: |
+          cd dist
+          zip -r SimplifiWorthBar-macos.zip SimplifiWorthBar install.sh get_networth_label.py
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/SimplifiWorthBar-macos.zip
