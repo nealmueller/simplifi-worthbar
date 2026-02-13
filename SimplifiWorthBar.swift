@@ -45,7 +45,10 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
     }()
 
     private lazy var scriptPath: String = {
-        appSupportDir.appendingPathComponent("get_networth_label.py").path
+        if let bundled = Bundle.main.path(forResource: "get_networth_label", ofType: "py") {
+            return bundled
+        }
+        return appSupportDir.appendingPathComponent("get_networth_label.py").path
     }()
 
     private lazy var baselineFile: URL = {
