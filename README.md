@@ -49,6 +49,14 @@ By default, artifacts are unsigned. For smoother install on other machines, use 
 - `CODESIGN_IDENTITY`
 - `NOTARY_PROFILE`
 
+GitHub release workflow can sign/notarize automatically when these repository secrets are set:
+- `APPLE_CODESIGN_IDENTITY`
+- `APPLE_DEVELOPER_ID_CERT_P12` (base64-encoded `.p12`)
+- `APPLE_DEVELOPER_ID_CERT_PASSWORD`
+- `APPLE_ID`
+- `APPLE_TEAM_ID`
+- `APPLE_APP_SPECIFIC_PASSWORD`
+
 ## Privacy
 - Reads local token/session data from your local user profile
 - Stores refreshed token cache at `~/Library/Application Support/SimplifiWorthBar/`

@@ -13,6 +13,7 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
     private let displayModeKey = "SimplifiWorthBar.displayMode"
 
     private var statusMessage: String = "Initializing"
+    private var lastErrorCode: String?
 
     private enum DisplayMode: String, CaseIterable {
         case compact
@@ -79,6 +80,23 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc private func checkForUpdates() {
+        if let url = URL(string: "https://github.com/nealmueller/simplifi-worthbar/releases/latest") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    @objc private func openLogsFolder() {
+        let logs = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs")
+        NSWorkspace.shared.open(logs)
+    }
+
+    @objc private func openSignInHelp() {
+        if let url = URL(string: "https://github.com/nealmueller/simplifi-worthbar#requirements") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
     @objc private func copyDiagnostics() {
         let output = runProcess(pythonPath, args: [scriptPath, "--diagnostics"]).stdout
         NSPasteboard.general.clearContents()
@@ -118,8 +136,10 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
                     nextTitle = self.renderTitle(mode: mode, total: total, dailyPercent: pct)
                     let src = snapshot.source ?? "unknown"
                     nextStatus = "OK (source: \(src))"
+                    self.lastErrorCode = nil
                 } else {
                     let code = snapshot.error_code ?? "unavailable"
+                    self.lastErrorCode = code
                     if code == "signin_required" {
                         nextTitle = "Sign In"
                         nextStatus = "Sign in to Simplifi in MenubarX, then refresh"
@@ -133,6 +153,7 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
                 nextTitle = "$--"
                 let err = result.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
                 nextStatus = err.isEmpty ? "Unexpected script output" : err
+                self.lastErrorCode = "unexpected_output"
             }
 
             DispatchQueue.main.async {
@@ -246,9 +267,23 @@ final class SimplifiWorthBarApp: NSObject, NSApplicationDelegate {
         openItem.target = self
         menu.addItem(openItem)
 
+        let updateItem = NSMenuItem(title: "Check for Updates", action: #selector(checkForUpdates), keyEquivalent: "u")
+        updateItem.target = self
+        menu.addItem(updateItem)
+
         let diagItem = NSMenuItem(title: "Copy Diagnostics", action: #selector(copyDiagnostics), keyEquivalent: "d")
         diagItem.target = self
         menu.addItem(diagItem)
+
+        let logsItem = NSMenuItem(title: "Open Logs Folder", action: #selector(openLogsFolder), keyEquivalent: "l")
+        logsItem.target = self
+        menu.addItem(logsItem)
+
+        if lastErrorCode == "signin_required" {
+            let helpItem = NSMenuItem(title: "Sign-In Setup Help", action: #selector(openSignInHelp), keyEquivalent: "")
+            helpItem.target = self
+            menu.addItem(helpItem)
+        }
 
         menu.addItem(.separator())
 
