@@ -2,6 +2,15 @@
 
 Tiny macOS menu bar app that shows your Quicken Simplifi net worth.
 
+## Download
+- Free download via GitHub Releases: https://github.com/nealmueller/simplifi-worthbar/releases/latest
+- Recommended file: `SimplifiWorthBar-macos.dmg`
+
+## Screenshots
+- Menu bar value (compact): coming soon
+- Menu bar value (full): coming soon
+- Sign-in required state: coming soon
+
 ## Features
 - Polls your current net worth and updates menu bar label
 - Onboarding status: clearly shows `Sign In` when Simplifi session is missing
@@ -62,6 +71,16 @@ GitHub release workflow can sign/notarize automatically when these repository se
 - Reads local token/session data from your local user profile
 - Stores refreshed token cache at `~/Library/Application Support/SimplifiWorthBar/`
 - Sends only required API requests to Simplifi endpoints to fetch account data
+- Sends no analytics to third-party trackers
+
+## Known Limitations
+- Requires an active Simplifi web session and currently depends on MenubarX WebKit storage.
+- If Simplifi changes auth/session internals, re-auth may be required.
+- Net worth value freshness depends on polling interval and Simplifi API response timing.
+
+## Support
+- Use `Copy Diagnostics` from the app menu when reporting issues.
+- Open an issue: https://github.com/nealmueller/simplifi-worthbar/issues
 
 ## License
 MIT
