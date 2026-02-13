@@ -7,9 +7,7 @@ Tiny macOS menu bar app that shows your Quicken Simplifi net worth.
 - Recommended file: `SimplifiWorthBar-macos.dmg`
 
 ## Screenshots
-- Menu bar value (compact): coming soon
-- Menu bar value (full): coming soon
-- Sign-in required state: coming soon
+![Simplifi WorthBar menubar state](assets/screenshots/menubar-worthbar-only.png)
 
 ## Features
 - Polls your current net worth and updates menu bar label
