@@ -83,9 +83,13 @@ ln -s /Applications "$DMG_STAGING/Applications"
 /usr/bin/hdiutil create -volname "$APP_NAME" -srcfolder "$DMG_STAGING" -ov -format UDZO "$DMG_PATH" >/dev/null
 
 if [[ -n "${NOTARY_PROFILE:-}" && -n "${CODESIGN_IDENTITY:-}" ]]; then
-  echo "Submitting DMG for notarization..."
-  /usr/bin/xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE" --wait
-  /usr/bin/xcrun stapler staple "$DMG_PATH"
+  if /usr/bin/xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1; then
+    echo "Submitting DMG for notarization..."
+    /usr/bin/xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE" --wait
+    /usr/bin/xcrun stapler staple "$DMG_PATH"
+  else
+    echo "Skipping notarization: notary profile '$NOTARY_PROFILE' not configured on this runner."
+  fi
 fi
 
 echo "Artifacts created:"

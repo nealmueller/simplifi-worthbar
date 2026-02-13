@@ -10,6 +10,7 @@ Tiny macOS menu bar app that shows your Quicken Simplifi net worth.
   - `Full` (`$1,234,567 +2%`)
   - `Delta Today` (`+$2.4K`)
 - One-click `Copy Diagnostics` for support/debugging
+- One-click `Check for Updates` and `Open Logs Folder`
 - Runs in background via LaunchAgent
 
 ## Requirements
